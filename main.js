@@ -108,22 +108,22 @@ function randomProg()
     console.log('num symbols: ' + numSymbols);
 
     program = new Program(numStates, numSymbols, canvas.width, canvas.height);
+    setShareURL();
+    run();
+}
 
-    // Set the sharing URL
-    var str = program.toString();
+function setShareURL()
+{
     var url = location.protocol + '//' + location.host + location.pathname;
-    var shareURL = url + '#' + str;
-    document.getElementById("shareURL").value = shareURL;
-
+    document.getElementById("shareURL").value = url + '#' + program.toString();
     // Clear the current hash tag to avoid confusion
     location.hash = '';
-
-    run();
 }
 
 function mutateProg()
 {
     program.mutate();
+    setShareURL();
     restartProg();
 }
 
