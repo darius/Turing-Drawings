@@ -121,6 +121,12 @@ function randomProg()
     run();
 }
 
+function mutateProg()
+{
+    program.mutate();
+    restartProg();
+}
+
 /**
 Reset the program state
 */

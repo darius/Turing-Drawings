@@ -53,12 +53,14 @@
                     </div>
 
                     <div style="margin-top:8px; margin-bottom:8px;">
-                        <button type="button" onclick="randomProg();">Random</button>
-                        <button type="button" onclick="restartProg();">Restart</button>
+                        <button type="button" style="width:6em" onclick="randomProg();">Random</button>
+                        <button type="button" style="width:6em" onclick="mutateProg();">Mutate</button>
                         <br>
-                        <button type="button" id="faster" onclick="bumpSpeed(+1);">Faster</button>
-                        <button type="button" id="slower" onclick="bumpSpeed(-1);">Slower</button>
-                        <button type="button" id="pause" onclick="pauseOrPlay();">Pause</button>
+                        <button type="button" style="width:6em" id="slower" onclick="bumpSpeed(-1);">Slower</button>
+                        <button type="button" style="width:6em" id="faster" onclick="bumpSpeed(+1);">Faster</button>
+                        <br>
+                        <button type="button" style="width:6em" id="pause" onclick="pauseOrPlay();">Pause</button>
+                        <button type="button" style="width:6em" onclick="restartProg();">Restart</button>
                     </div>
 
                     <div style="margin-top:16px; margin-bottom:16px; width:400px; text-align: justify;">
@@ -99,21 +101,27 @@
         text-align: justify;">
           <h3>Addendum by <a href="http://wry.me">Darius Bacon</a></h3>
 
-          <p>This is <a
-          href="https://github.com/darius/Turing-Drawings">an asm.js fork</a>
-          of Maxime Chevalier-Boisvert's <a
-          href="http://maximecb.github.com/Turing-Drawings/#">original
-          page</a> (see original <a
-          href="http://pointersgonewild.wordpress.com/2012/12/31/turing-drawings/">blog
-          post</a>). The original code
-          interprets the Turing machine; this code compiles it to <a
-          href="http://asmjs.org/">asm.js</a>. 
+          <p>This
+          is <a href="https://github.com/darius/Turing-Drawings">an
+          asm.js fork</a> of Maxime
+          Chevalier-Boisvert's <a href="http://maximecb.github.com/Turing-Drawings/#">original
+          page</a> (see
+          original <a href="http://pointersgonewild.wordpress.com/2012/12/31/turing-drawings/">blog
+          post</a>
+          and <a href="https://pointersgonewild.wordpress.com/2013/05/15/turing-drawings-followup/">followup</a>). The
+          original code interprets the Turing machine; this code
+          compiles it to <a href="http://asmjs.org/">asm.js</a>.
 
           <p>(I also added the Faster/Slower/Pause buttons and the ring
           around the machine's head visible at slow speeds, moved the 
           starting position to mid-canvas from upper left, and fixed 
           a color-map entry.)
-          
+
+          <p>Update: Adapted the Mutate button
+          from <a href="http://ianiselsewhere.com/Turing-Drawings/index.html">ianiselsewhere</a>,
+          who also added cross-breeding, which you should totally
+          check out.
+
           <p>Some timings on my laptop (a ThinkPad X1 Carbon running
           Firefox Nightly (2013 March) and Chrome 26, on Windows 7)
           for a particular Turing machine:

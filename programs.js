@@ -85,13 +85,7 @@ function Program(numStates, numSymbols, mapWidth, mapHeight)
     {
         for (var sy = 0; sy < numSymbols; ++sy)
         {
-            this.setTrans(
-                st,
-                sy,
-                randomInt(0, numStates - 1),
-                randomInt(1, numSymbols - 1),
-                randomInt(0, NUM_ACTIONS - 1)
-            );
+            this.randomTrans(st, sy);
         }
     }
 
@@ -106,6 +100,8 @@ Program.prototype.setTrans = function (st0, sy0, st1, sy1, ac1)
     this.table[idx + 0] = st1;
     this.table[idx + 1] = sy1;
     this.table[idx + 2] = ac1;
+
+    delete this.update;
 }
 
 Program.prototype.getTrans = function (st0, sy0)
@@ -114,6 +110,21 @@ Program.prototype.getTrans = function (st0, sy0)
     return {state:  this.table[idx+0],
             symbol: this.table[idx+1],
             act:    this.table[idx+2]};
+}
+
+Program.prototype.mutate = function ()
+{
+    this.randomTrans(randomInt(0, this.numStates - 1),
+                     randomInt(0, this.numSymbols - 1));
+}
+
+Program.prototype.randomTrans = function (st, sy)
+{
+    this.setTrans(st,
+                  sy,
+                  randomInt(0, this.numStates - 1),
+                  randomInt(1, this.numSymbols - 1),
+                  randomInt(0, NUM_ACTIONS - 1));
 }
 
 Program.prototype.reset = function ()
