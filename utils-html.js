@@ -34,13 +34,15 @@
 *
 *****************************************************************************/
 
+'use strict';
+
 // Default console logging function implementation
-if (!window.console) console = {};
+if (!window.console) window.console = {};
 console.log = console.log || function() {};
 console.warn = console.warn || function() {};
 console.error = console.error || function() {};
 console.info = console.info || function() {};
-print = function (v) { console.log(String(v)); }
+window.print = function (v) { console.log(String(v)); }
 
 // Check for typed array support
 if (!this.Int8Array)

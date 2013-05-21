@@ -34,9 +34,22 @@
 *
 *****************************************************************************/
 
+'use strict';
+
 //============================================================================
 // Page interface code
 //============================================================================
+
+var schedule =
+    (   window.requestAnimationFrame
+     || window.webkitRequestAnimationFrame
+     || window.mozRequestAnimationFrame
+     || function (callback) { setTimeout(callback, UPDATE_TIME); });
+
+var running = false;
+
+var canvas;
+var program;
 
 /**
 Called after page load to initialize needed resources
@@ -74,10 +87,7 @@ function init()
     }
 
     // Set the update function to be called regularly
-    updateInterv = setInterval(
-        updateRender,
-        UPDATE_TIME
-    );
+    run();
 }
 window.addEventListener("load", init, false);
 
@@ -107,6 +117,8 @@ function randomProg()
 
     // Clear the current hash tag to avoid confusion
     location.hash = '';
+
+    run();
 }
 
 /**
@@ -115,10 +127,42 @@ Reset the program state
 function restartProg()
 {
     program.reset();
+    run();
+}
+
+function pauseOrPlay()
+{
+    if (running)
+        stop();
+    else
+        run();
+}
+
+function run()
+{
+    if (!running) schedule(updateRender, canvas);
+    running = true;
+    document.getElementById("pause").innerHTML = "Pause";
+}
+
+function stop()
+{
+    running = false;
+    document.getElementById("pause").innerHTML = "Play";
+}
+
+function bumpSpeed(offset)
+{
+    speed = Math.max(0, Math.min(speed + offset, speeds.length-1));
+    document.getElementById("slower").disabled = (speed === 0);
+    document.getElementById("faster").disabled = (speed === speeds.length-1);
+
+    UPDATE_ITRS = speeds[speed];
+    run();
 }
 
 // Default console logging function implementation
-if (!window.console) console = {};
+if (!window.console) window.console = {};
 console.log = console.log || function(){};
 console.warn = console.warn || function(){};
 console.error = console.error || function(){};
@@ -136,7 +180,7 @@ var colorMap = [
     0  ,0  ,0  ,    // Black
     255,255,255,    // White
     0  ,255,0  ,    // Green
-    0, ,0, ,255,    // Blue
+    0  ,0  ,255,    // Blue
     255,255,0  ,
     0  ,255,255,
     255,0  ,255,
@@ -153,14 +197,6 @@ Maximum iterations per update
 var speeds = [1, 3, 10, 33, 100, 333, 1000, 3333, 10000, 33333, 100000, 350000, 1000000, 3500000];
 var speed = 10;
 var UPDATE_ITRS = speeds[speed];
-
-function bumpSpeed(offset) {
-    speed = Math.max(0, Math.min(speed + offset, speeds.length-1));
-    document.getElementById("slower").disabled = (speed === 0);
-    document.getElementById("faster").disabled = (speed === speeds.length-1);
-
-    UPDATE_ITRS = speeds[speed];
-}
 
 /**
 Update the rendering
@@ -242,5 +278,8 @@ function updateRender()
 
     // Show the image data
     canvas.ctx.putImageData(canvas.imgData, 0, 0);
+
+    // Repeat
+    if (running) schedule(updateRender, canvas);
 }
 

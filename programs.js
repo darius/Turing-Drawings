@@ -34,6 +34,8 @@
 *
 *****************************************************************************/
 
+'use strict';
+
 var ACTION_LEFT  = 0;
 var ACTION_RIGHT = 1;
 var ACTION_UP    = 2;
@@ -142,8 +144,8 @@ Program.fromString = function (str, mapWidth, mapHeight)
 
     var nums = str.split(',').map(Number);
 
-    numStates  = nums[0];
-    numSymbols = nums[1];
+    var numStates  = nums[0];
+    var numSymbols = nums[1];
 
     console.log('num states: ' + numStates);
     console.log('num symbols: ' + numSymbols);
@@ -171,8 +173,10 @@ Program.prototype.update = function (numItrs)
 {
     // N.B. If you ever mutate this.table, mapWidth, mapHeight, then
     // also delete this.update so it'll get regenerated here.
-    eval(asmgenerate(this))
-    this.reallyUpdate = goober(window, null, this.heap.buffer);
+    // (0,eval) explained at
+    // http://perfectionkills.com/global-eval-what-are-the-options/
+    var linkUpdate = (0,eval)(asmgenerate(this));
+    this.reallyUpdate = linkUpdate(window, null, this.heap.buffer);
     this.update = function(numItrs) {
         this.reallyUpdate(numItrs);
         this.itrCount += numItrs;
@@ -201,7 +205,7 @@ function asmgenerate(program)
     var logNumSymbols = Math.ceil(log2(program.numSymbols));
 
     var code = "";
-    code += "function goober(stdlib, foreign, heap) {\n";
+    code += "(function(stdlib, foreign, heap) {\n";
     code += '"use asm";\n';
     code += "var heap32 = new stdlib.Int32Array(heap);\n";
     code += "function update(numItrs) {\n";
@@ -256,7 +260,7 @@ function asmgenerate(program)
     code += "    heap32["+((after+2)<<2)+">>2] = yPos;\n";
     code += "}\n";
     code += "return update;\n";
-    code += "}\n";
+    code += "})\n";
 //    console.log(code);
     return code;
 }
