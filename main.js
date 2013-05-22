@@ -72,13 +72,7 @@ function init()
     // If a location hash is specified
     if (location.hash !== '')
     {
-        console.log('parsing program');
-
-        program = Program.fromString(
-            location.hash.substr(1),
-            canvas.width,
-            canvas.height
-        );
+        setProg();
     }
     else
     {
@@ -86,10 +80,23 @@ function init()
         randomProg();
     }
 
+    window.onhashchange = setProg;
+
     // Set the update function to be called regularly
     run();
 }
 window.addEventListener("load", init, false);
+
+function setProg()
+{
+    console.log('parsing program');
+
+    program = Program.fromString(
+        location.hash.substr(1),
+        canvas.width,
+        canvas.height
+    );
+}
 
 /**
 Generate a new random program
@@ -115,9 +122,7 @@ function randomProg()
 function setShareURL()
 {
     var url = location.protocol + '//' + location.host + location.pathname;
-    document.getElementById("shareURL").value = url + '#' + program.toString();
-    // Clear the current hash tag to avoid confusion
-    location.hash = '';
+    location.replace(url + '#' + program);
 }
 
 function mutateProg()
